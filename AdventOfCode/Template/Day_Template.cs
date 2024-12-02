@@ -43,7 +43,7 @@ public class DayXX : BaseDay
         return new(FormatSolutionOutput(solution, testResults, _runTestCases, _runOptimizedSolutions));
     }
 
-    public string Solve_1_Initial(string input)
+    public static string Solve_1_Initial(string input)
     {
         var solution = 1;
         var inputSpan = input.AsSpan();
@@ -58,17 +58,17 @@ public class DayXX : BaseDay
         return $"{solution}";
     }
 
-    public string Solve_2_Initial(string input)
+    public static string Solve_2_Initial(string input)
     {
         return $"No Solution";
     }
 
-    public string Solve_1_Optimized(string input)
+    public static string Solve_1_Optimized(string input)
     {
         return $"No Solution";
     }
 
-    public string Solve_2_Optimized(string input)
+    public static string Solve_2_Optimized(string input)
     {
         return $"No Solution";
     }
