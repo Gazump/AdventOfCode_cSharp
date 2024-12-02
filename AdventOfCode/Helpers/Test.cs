@@ -10,7 +10,7 @@ namespace AdventOfCode.Helpers
             return _testCases.Select((test, index) =>
             {
                 string actual = SolutionFunction(test.TestInput);
-                return ValidateResult(actual, part == 1 ? test.ExpectedSolve1 : test.ExpectedSolve2, $"Part {part} Test {index + 1}");
+                return ValidateResult(actual, part == 1 ? test.ExpectedSolve1 : test.ExpectedSolve2, $"Test {index + 1}");
             });
         }
 

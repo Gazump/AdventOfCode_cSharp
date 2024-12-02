@@ -1,5 +1,6 @@
 ﻿using static AdventOfCode.Helpers.Test;
 using static AdventOfCode.Helpers.InputHandler;
+using static AdventOfCode.Helpers.OutputHandler;
 
 namespace AdventOfCode;
 
@@ -8,6 +9,7 @@ public class Day02 : BaseDay
     private readonly string _input;
     private readonly List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases;
     private readonly bool _runTestCases = false;
+    private readonly bool _runOptimizedSolutions = true;
 
     public Day02()
     {
@@ -32,36 +34,18 @@ public class Day02 : BaseDay
 
     public override ValueTask<string> Solve_1()
     {
-        if (_runTestCases)
-        {
-            var testResults = RunTestCases(Solve_1_Initial, _testCases, 1).ToList();
-            var solution = Solve_1_Initial(_input);
+        var testResults = _runTestCases ? RunTestCases(_runOptimizedSolutions ? Solve_1_Optimized : Solve_1_Initial, _testCases, 1).ToList() : null;
+        var solution = _runOptimizedSolutions ? Solve_1_Optimized(_input) : Solve_1_Initial(_input);
 
-            return new($"{string.Join("\n", testResults)}\nSolution to {ClassPrefix} {CalculateIndex()}, part 1: {solution}");
-        }
-        else
-        {
-            var solution = Solve_1_Optimized(_input);
-
-            return new($"Optimized Solution: {solution}");
-        }
+        return new(FormatSolutionOutput(solution, testResults, _runTestCases, _runOptimizedSolutions));
     }
 
     public override ValueTask<string> Solve_2()
     {
-        if (_runTestCases)
-        {
-            var testResults = RunTestCases(Solve_2_Initial, _testCases, 2).ToList();
-            var solution = Solve_2_Initial(_input);
+        var testResults = _runTestCases ? RunTestCases(_runOptimizedSolutions ? Solve_2_Optimized : Solve_2_Initial, _testCases, 2).ToList() : null;
+        var solution = _runOptimizedSolutions ? Solve_2_Optimized(_input) : Solve_2_Initial(_input);
 
-            return new($"{string.Join("\n", testResults)}\nSolution to {ClassPrefix} {CalculateIndex()}, part 2: {solution}");
-        }
-        else
-        {
-            var solution = Solve_2_Optimized(_input);
-
-            return new($"Optimized Solution: {solution}");
-        }
+        return new(FormatSolutionOutput(solution, testResults, _runTestCases, _runOptimizedSolutions));
     }
 
     public string Solve_1_Initial(string input)
@@ -217,14 +201,14 @@ public class Day02 : BaseDay
 
         for (int i = 1; i < numbers.Length; i++)
         {
-            int diff = numbers[i] - numbers[i - 1];
+            int diff = Math.Abs(numbers[i] - numbers[i - 1]);
             if (diff < minDiff || diff > maxDiff)
             {
                 return false;
             }
 
-            if (numbers[i] > numbers[i - 1]) isDescending = false;
-            if (numbers[i] < numbers[i - 1]) isAscending = false;
+            if (numbers[i] >= numbers[i - 1]) isDescending = false;
+            if (numbers[i] <= numbers[i - 1]) isAscending = false;
 
             if (!isAscending && !isDescending)
             {
@@ -249,14 +233,14 @@ public class Day02 : BaseDay
 
             if (prev.HasValue)
             {
-                int diff = numbers[i] - prev.Value;
+                int diff = Math.Abs(numbers[i] - prev.Value);
                 if (diff < minDiff || diff > maxDiff)
                 {
                     return false;
                 }
 
-                if (numbers[i] > prev.Value) isDescending = false;
-                if (numbers[i] < prev.Value) isAscending = false;
+                if (numbers[i] >= prev.Value) isDescending = false;
+                if (numbers[i] <= prev.Value) isAscending = false;
 
                 if (!isAscending && !isDescending)
                 {
