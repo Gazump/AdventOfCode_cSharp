@@ -1,11 +1,13 @@
-﻿namespace AdventOfCode;
+﻿using static AdventOfCode.Helpers.Test;
 
-public class Day01 : BaseDay
+namespace AdventOfCode;
+
+public class Day_01 : BaseDay
 {
     private readonly string _input;
     private readonly List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases;
 
-    public Day01()
+    public Day_01()
     {
         _input = File.ReadAllText(InputFilePath);
 
@@ -28,7 +30,7 @@ public class Day01 : BaseDay
 
     public override ValueTask<string> Solve_1()
     {
-        var testResults = Test.Run(Solve_1_Initial, _testCases, 1).ToList();
+        var testResults = RunTestCases(Solve_1_Initial, _testCases, 1).ToList();
         var solution = Solve_1_Initial(_input);
 
         return new($"{string.Join("\n", testResults)}\nSolution to {ClassPrefix} {CalculateIndex()}, part 1: {solution}");
@@ -36,7 +38,7 @@ public class Day01 : BaseDay
 
     public override ValueTask<string> Solve_2()
     {
-        var testResults = Test.Run(Solve_2_Initial, _testCases, 2).ToList();
+        var testResults = RunTestCases(Solve_2_Initial, _testCases, 2).ToList();
         var solution = Solve_2_Initial(_input);
 
         return new($"{string.Join("\n", testResults)}\nSolution to {ClassPrefix} {CalculateIndex()}, part 2: {solution}");

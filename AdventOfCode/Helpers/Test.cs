@@ -1,11 +1,11 @@
 ﻿
-namespace AdventOfCode
+namespace AdventOfCode.Helpers
 {
     class Test
     {
         public delegate string SolutionFunction(string input);
 
-        public static IEnumerable<string> Run(SolutionFunction SolutionFunction, List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases, int part)
+        public static IEnumerable<string> RunTestCases(SolutionFunction SolutionFunction, List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases, int part)
         {
             return _testCases.Select((test, index) =>
             {
