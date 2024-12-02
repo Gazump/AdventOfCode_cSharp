@@ -1,6 +1,7 @@
 ﻿using static AdventOfCode.Helpers.Test;
 using static AdventOfCode.Helpers.InputHandler;
 using static AdventOfCode.Helpers.OutputHandler;
+using System.Collections.Concurrent;
 
 namespace AdventOfCode;
 
@@ -137,8 +138,6 @@ public class Day_01 : BaseDay
         return $"{solution}";
     }
 
-
-
     public static string Solve_2_Optimized(string input)
     {
         var inputSpan = input.AsSpan();
@@ -178,6 +177,47 @@ public class Day_01 : BaseDay
             {
                 solution += x * count;
             }
+        }
+
+        return $"{solution}";
+    }
+
+    public string Solve_1_Optimized_Parallel(string input)
+    {
+        var inputSpan = input.AsSpan();
+        var bufferX = new List<int>();
+        var bufferY = new List<int>();
+        var lineSegments = new List<string>();
+
+        while (!inputSpan.IsEmpty)
+        {
+            var line = ReadNextLine(ref inputSpan);
+            if (!line.IsEmpty)
+            {
+                lineSegments.Add(line.ToString());
+            }
+        }
+
+        var localX = new ConcurrentBag<int>();
+        var localY = new ConcurrentBag<int>();
+
+        Parallel.ForEach(lineSegments, line =>
+        {
+            var parts = ParseNumbersThreadSafe(line.AsSpan());
+            localX.Add(parts[0]);
+            localY.Add(parts[1]);
+        });
+
+        bufferX = [.. localX];
+        bufferY = [.. localY];
+
+        bufferX.Sort();
+        bufferY.Sort();
+
+        int solution = 0;
+        for (int i = 0; i < bufferX.Count; i++)
+        {
+            solution += Math.Abs(bufferX[i] - bufferY[i]);
         }
 
         return $"{solution}";
