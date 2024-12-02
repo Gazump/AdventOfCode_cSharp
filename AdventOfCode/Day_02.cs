@@ -48,7 +48,7 @@ public class Day_02 : BaseDay
         return new(FormatSolutionOutput(solution, testResults, _runTestCases, _runOptimizedSolutions));
     }
 
-    public string Solve_1_Initial(string input)
+    public static string Solve_1_Initial(string input)
     {
         var lines = input.Split(Environment.NewLine);
 
@@ -69,7 +69,7 @@ public class Day_02 : BaseDay
         return $"{solution}";
     }
 
-    public string Solve_2_Initial(string input)
+    public static string Solve_2_Initial(string input)
     {
         var lines = input.Split(Environment.NewLine);
 
@@ -105,7 +105,7 @@ public class Day_02 : BaseDay
         return $"{solution}";
     }
 
-    public string Solve_1_Optimized(string input)
+    public static string Solve_1_Optimized(string input)
     {
         var safeCount = 0;
         var inputSpan = input.AsSpan();
@@ -125,7 +125,7 @@ public class Day_02 : BaseDay
         return $"{safeCount}";
     }
 
-    public string Solve_2_Optimized(string input)
+    public static string Solve_2_Optimized(string input)
     {
         var safeCount = 0;
         var inputSpan = input.AsSpan();
