@@ -4,14 +4,14 @@ using static AdventOfCode.Helpers.OutputHandler;
 
 namespace AdventOfCode;
 
-public class Day02 : BaseDay
+public class Day_02 : BaseDay
 {
     private readonly string _input;
     private readonly List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases;
     private readonly bool _runTestCases = false;
     private readonly bool _runOptimizedSolutions = true;
 
-    public Day02()
+    public Day_02()
     {
         _input = File.ReadAllText(InputFilePath);
 
