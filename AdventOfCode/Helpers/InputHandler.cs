@@ -69,5 +69,33 @@
             input = input[(index + 1)..];
             return nextLine;
         }
+
+        public static char[,] ParseGrid(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                throw new ArgumentException("Input cannot be null or empty.");
+
+            var lines = input.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            int width = lines[0].Length;
+
+            foreach (var line in lines)
+            {
+                if (line.Length != width)
+                    throw new ArgumentException("All lines in the input must have the same length to form a rectangle.");
+            }
+
+            int height = lines.Length;
+            var grid = new char[height, width];
+
+            for (int row = 0; row < height; row++)
+            {
+                for (int col = 0; col < width; col++)
+                {
+                    grid[row, col] = lines[row][col];
+                }
+            }
+
+            return grid;
+        }
     }
 }
