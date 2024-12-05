@@ -9,7 +9,7 @@ public class Day_04 : BaseDay
 {
     private readonly string _input;
     private readonly List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases;
-    private readonly bool _runTestCases = true;
+    private readonly bool _runTestCases = false;
     private readonly bool _runOptimizedSolutions = true;
 
     public Day_04()

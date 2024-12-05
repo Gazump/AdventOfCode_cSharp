@@ -2,15 +2,19 @@
 {
     public class InputHandler
     {
-        public static Span<int> ParseNumbers(ReadOnlySpan<char> line, int bufferSize = 8)
+        public static Span<int> ParseNumbers(ReadOnlySpan<char> line, ReadOnlySpan<char> delimiters = default, int bufferSize = 8)
         {
+            if (delimiters.IsEmpty) 
+            {
+                delimiters = " ".AsSpan();
+            }
+
             var buffer = new int[bufferSize];
-            int count = 0;
-            int start = 0;
+            int count = 0, start = 0;
 
             for (int i = 0; i <= line.Length; i++)
             {
-                if (i == line.Length || line[i] == ' ')
+                if (i == line.Length || delimiters.Contains(line[i]))
                 {
                     if (i > start)
                     {
@@ -25,6 +29,19 @@
             }
 
             return buffer.AsSpan(0, count);
+        }
+
+
+        public static bool Contains(ReadOnlySpan<char> span, char c)
+        {
+            foreach (var item in span)
+            {
+                if (item == c)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static int[] ParseNumbersThreadSafe(ReadOnlySpan<char> line, int bufferSize = 8)
@@ -61,11 +78,11 @@
             if (index == -1)
             {
                 var line = input;
-                input = ReadOnlySpan<char>.Empty;
-                return line.TrimEnd('\r');
+                input = [];
+                return line.Trim();
             }
 
-            var nextLine = input[..index].TrimEnd('\r');
+            var nextLine = input[..index].Trim();
             input = input[(index + 1)..];
             return nextLine;
         }
