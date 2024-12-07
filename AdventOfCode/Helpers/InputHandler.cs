@@ -114,5 +114,39 @@
 
             return grid;
         }
+
+        public static (int row, int col)? FindCharacterInGrid(char[,] grid, char target)
+        {
+            int rows = grid.GetLength(0);
+            int cols = grid.GetLength(1);
+
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    if (grid[row, col] == target)
+                    {
+                        return (row, col); // Found, return position
+                    }
+                }
+            }
+
+            return null; // Not found
+        }
+
+        public static char[,] DeepCopy(char[,] original)
+        {
+            int rows = original.GetLength(0);
+            int cols = original.GetLength(1);
+            char[,] copy = new char[rows, cols];
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    copy[row, col] = original[row, col];
+                }
+            }
+            return copy;
+        }
     }
 }
