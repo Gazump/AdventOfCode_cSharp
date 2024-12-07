@@ -2,9 +2,38 @@
 {
     public class InputHandler
     {
-        public static Span<int> ParseNumbers(ReadOnlySpan<char> line, ReadOnlySpan<char> delimiters = default, int bufferSize = 8)
+        public static Span<long> ParseLongNumbers(ReadOnlySpan<char> line, ReadOnlySpan<char> delimiters = default, int bufferSize = 8)
         {
             if (delimiters.IsEmpty) 
+            {
+                delimiters = " ".AsSpan();
+            }
+
+            var buffer = new long[bufferSize];
+            int count = 0, start = 0;
+
+            for (int i = 0; i <= line.Length; i++)
+            {
+                if (i == line.Length || delimiters.Contains(line[i]))
+                {
+                    if (i > start)
+                    {
+                        var segment = line[start..i];
+                        if (long.TryParse(segment, out var num))
+                        {
+                            buffer[count++] = num;
+                        }
+                    }
+                    start = i + 1;
+                }
+            }
+
+            return buffer.AsSpan(0, count);
+        }
+
+        public static Span<int> ParseNumbers(ReadOnlySpan<char> line, ReadOnlySpan<char> delimiters = default, int bufferSize = 8)
+        {
+            if (delimiters.IsEmpty)
             {
                 delimiters = " ".AsSpan();
             }
