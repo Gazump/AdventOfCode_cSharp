@@ -9,8 +9,8 @@ public class Day_06 : BaseDay
 {
     private readonly string _input;
     private readonly List<(string TestInput, string ExpectedSolve1, string ExpectedSolve2)> _testCases;
-    private readonly bool _runTestCases = true;
-    private readonly bool _runOptimizedSolutions = false;
+    private readonly bool _runTestCases = false;
+    private readonly bool _runOptimizedSolutions = true;
 
     enum Direction
     {
@@ -20,13 +20,13 @@ public class Day_06 : BaseDay
         Left
     }
 
-    private static readonly (int rowDelta, int colDelta)[] Deltas = new[]
-    {
+    private static readonly (int rowDelta, int colDelta)[] Deltas =
+    [
         (-1, 0), // Up
         (0, 1),  // Right
         (1, 0),  // Down
         (0, -1)  // Left
-    };
+    ];
 
     public Day_06()
     {
@@ -105,17 +105,6 @@ public class Day_06 : BaseDay
             {
                 direction = (Direction)(((int)direction + 1) % 4);
             }
-
-            /*for (var r = 0; r < rows; r++) 
-            {
-                for (var c = 0; c < cols; c++)
-                {
-                    Console.Write(grid[r, c]);
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();*/
-
         } 
 
         return $"{uniqueCount}";
@@ -183,17 +172,6 @@ public class Day_06 : BaseDay
                         {
                             direction = (Direction)(((int)direction + 1) % 4);
                         }
-
-                        /*for (var r = 0; r < rows; r++) 
-                        {
-                            for (var c = 0; c < cols; c++)
-                            {
-                                Console.Write(grid[r, c]);
-                            }
-                            Console.WriteLine();
-                        }
-                        Console.WriteLine();*/
-
                     }
                 }
             }
@@ -202,13 +180,89 @@ public class Day_06 : BaseDay
         return $"{successfulObstacle}";
     }
 
+    // pretty quick already < 1ms
     public static string Solve_1_Optimized(string input)
     {
-        return $"No Solution";
+        return Solve_1_Initial(input);
     }
 
+    // some parallet processing to get from 2.7s down to <650ms.
     public static string Solve_2_Optimized(string input)
     {
-        return $"No Solution";
+        var initialGrid = ParseGrid(input);
+        var rows = initialGrid.GetLength(0);
+        var cols = initialGrid.GetLength(1);
+        var initialGuard = FindCharacterInGrid(initialGrid, '^');
+
+        int successfulObstacle = 0;
+        
+        var obstaclePositions = new List<(int row, int col)>();
+        for (var r = 0; r < rows; r++)
+        {
+            for (var c = 0; c < cols; c++)
+            {
+                if (initialGrid[r, c] == '.')
+                {
+                    obstaclePositions.Add((r, c));
+                }
+            }
+        }
+
+        object lockObj = new();
+        Parallel.ForEach(obstaclePositions, (position) =>
+        {
+            var (r, c) = position;
+
+            var grid = (char[,])initialGrid.Clone();
+            grid[r, c] = '#';
+
+            var guardPos = (initialGuard.Value.row, initialGuard.Value.col);
+            var direction = Direction.Up;
+
+            var visitedStates = new HashSet<(int row, int col, Direction dir)>();
+            bool isLoop = false;
+
+            while (true)
+            {
+                var state = (guardPos.row, guardPos.col, direction);
+                if (visitedStates.Contains(state))
+                {
+                    isLoop = true;
+                    break;
+                }
+                visitedStates.Add(state);
+
+                var (rowDelta, colDelta) = Deltas[(int)direction];
+                var newRow = guardPos.row + rowDelta;
+                var newCol = guardPos.col + colDelta;
+
+                if (newRow < 0 || newCol < 0 || newRow >= rows || newCol >= cols)
+                {
+                    break;
+                }
+
+                var cell = grid[newRow, newCol];
+                if (cell == '.' || cell == '^')
+                {
+                    guardPos = (newRow, newCol);
+                }
+                else if (cell == '#' || cell == 'X')
+                {
+                    direction = (Direction)(((int)direction + 1) % 4);
+                }
+            }
+
+            if (isLoop)
+            {
+                lock (lockObj)
+                {
+                    successfulObstacle++;
+                }
+            }
+        });
+
+        return $"{successfulObstacle}";
     }
+
+
 }
