@@ -182,7 +182,7 @@ public class Day_01 : BaseDay
         return $"{solution}";
     }
 
-    public string Solve_1_Optimized_Parallel(string input)
+    public static string Solve_1_Optimized_Parallel(string input)
     {
         var inputSpan = input.AsSpan();
         var bufferX = new List<int>();
